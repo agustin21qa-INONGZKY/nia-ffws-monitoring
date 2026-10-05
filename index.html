@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NIA FFWS | Downstream Magat Station Monitoring</title>
+<link rel="icon" type="image/png" href="nia-logo.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f3f7fb;color:#102235}
 :root{--navy:#06243d;--blue:#0878bb;--cyan:#12a7d6;--green:#168a4b;--amber:#c87505;--red:#c92d36;--line:#dce5ee}
 header{background:linear-gradient(135deg,#061f38,#0a5d91);color:#fff;padding:15px 4%;position:sticky;top:0;z-index:1000;box-shadow:0 4px 16px #0003}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:11px}.mark{width:44px;height:44px;background:#fff;color:#075a91;border-radius:11px;display:grid;place-items:center;font-weight:900}.brand b{display:block;font-size:16px}.brand small{opacity:.75;font-size:11px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:11px}.mark{width:44px;height:44px;background:#fff;border-radius:11px;display:grid;place-items:center;overflow:hidden;padding:3px}.mark img{width:100%;height:100%;object-fit:contain;border-radius:8px}.brand b{display:block;font-size:16px}.brand small{opacity:.75;font-size:11px}
 nav a{color:#fff;text-decoration:none;margin-left:14px;font-size:12px}
 .hero{padding:32px 4%;background:linear-gradient(#e9f6ff,#f3f7fb)}.hero h1{margin:0 0 7px;font-size:31px}.hero p{margin:0;color:#5c7083}
 .wrap{padding:0 4% 40px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:-6px}
@@ -24,7 +25,7 @@ footer{background:#061f38;color:#b8ccdc;padding:22px 4%;font-size:11px}
 </style>
 </head>
 <body>
-<header><div class="bar"><div class="brand"><div class="mark">NIA</div><div><b>Flood Forecasting & Warning System</b><small>Downstream of Magat Dam • Version 3</small></div></div><nav><a href="#dashboard">Dashboard</a><a href="#mapbox">Map</a><a href="#stations">Stations</a></nav></div></header>
+<header><div class="bar"><div class="brand"><div class="mark"><img src="nia-logo.png" alt="National Irrigation Administration logo"></div><div><b>Flood Forecasting & Warning System</b><small>Downstream of Magat Dam • Version 3</small></div></div><nav><a href="#dashboard">Dashboard</a><a href="#mapbox">Map</a><a href="#stations">Stations</a></nav></div></header>
 <section class="hero"><h1>NIA FFWS Monitoring Portal</h1><p>Interactive station map based on the Downstream of Magat Dam equipment inventory, updated August 28, 2026.</p></section>
 <main class="wrap" id="dashboard">
 <div class="stats">
