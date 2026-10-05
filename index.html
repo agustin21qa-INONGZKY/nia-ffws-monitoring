@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#062b49">
+<title>NIA FFWS | National Telemetry System Consolidated Inventory V5</title>
+<link rel="icon" href="nia-logo.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--n:#062b49;--b:#0b628f;--g:#008b45;--red:#c63c45;--amber:#b77a00;--bg:#f3f7fa;--line:#d9e5eb;--txt:#173042;--muted:#6c7e89}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px Inter,Segoe UI,Arial,sans-serif}
+header{position:sticky;top:0;z-index:1000;background:linear-gradient(110deg,#062b49,#08709d);color:#fff;box-shadow:0 4px 18px #00253b33}
+.nav{max-width:1500px;margin:auto;padding:10px 18px;display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;background:#fff;padding:4px;border-radius:12px;object-fit:contain;animation:float 3s ease-in-out infinite,glow 2.5s infinite}
+h1{font-size:17px;margin:0}.sub{font-size:10px;opacity:.82;margin-top:3px}.ver{margin-left:auto;border:1px solid #ffffff55;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:800}
+main{max-width:1500px;margin:auto;padding:18px}.hero{padding:21px 23px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#eaf5fb,#fff);box-shadow:0 8px 25px #072c4810}
+.hero h2{margin:0;color:var(--n);font-size:26px}.hero p{color:var(--muted);margin:6px 0 0}.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(5,1fr);margin:14px 0}.card{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 7px 23px #072c4810}.stat{padding:14px}.stat small{color:var(--muted);font-size:9px;font-weight:900}.stat b{display:block;font-size:25px;margin:5px 0}.dashboard{grid-template-columns:1.45fr .95fr}.section{padding:14px}.section h3{margin:0 0 10px;font-size:14px}
+.controls{display:grid;grid-template-columns:1.5fr .9fr .9fr;gap:8px;margin-bottom:9px}input,select{width:100%;padding:10px;border:1px solid #d4e1e8;border-radius:9px;background:#fff;color:var(--txt)}
+.map{height:520px;border:1px solid var(--line);border-radius:11px;overflow:hidden}#map{height:100%}
+.tablewrap{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:10px}th,td{padding:8px;border-bottom:1px solid #edf2f5;text-align:left;vertical-align:top}th{position:sticky;top:0;background:#eef6fa;color:#45616f;font-size:9px;text-transform:uppercase;z-index:2}
+.status{font-weight:800;font-size:9px;padding:4px 7px;border-radius:999px;display:inline-block}.op{background:#e6f7ee;color:#08703a}.off{background:#fde9eb;color:#a72731}.att{background:#fff3d9;color:#8b6100}
+.regions{grid-template-columns:repeat(2,1fr)}.region{padding:12px}.region b{display:block;color:var(--b);font-size:14px}.muted{color:var(--muted);font-size:10px}
+.note{margin-top:10px;background:#eef8fc;border-left:4px solid #2996c5;padding:10px;border-radius:7px;font-size:10px;color:#526c79;line-height:1.5}
+footer{margin-top:20px;background:var(--n);color:#cbdce7;padding:15px 20px;font-size:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+@keyframes float{50%{transform:translateY(-3px)}}@keyframes glow{50%{box-shadow:0 0 0 1px #fff8,0 0 18px #54c28a66}}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(3,1fr)}.dashboard{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:10px}.nav{padding:8px 10px}.logo{width:42px;height:42px}h1{font-size:13px}.sub{font-size:8px}.ver{display:none}.hero h2{font-size:20px}.stats{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.regions{grid-template-columns:1fr}.map{height:420px}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<img class="logo" src="nia-logo.png" alt="NIA logo">
+<div><h1>Flood Forecasting &amp; Warning System</h1><div class="sub">National Telemetry System • Consolidated Inventory &amp; Monitoring Portal</div></div>
+<div class="ver">VERSION 5 • NATIONAL</div>
+</div></header>
+<main>
+<section class="hero"><h2>NIA Telemetry System Consolidated Inventory</h2><p>CAR • Regions I–XIII • MARIIS • UPRIIS • Current dataset: Downstream of Magat Dam</p></section>
+
+<section class="grid stats">
+<div class="card stat"><small>TOTAL SYSTEMS</small><b id="total">—</b><span class="muted">Loaded inventory records</span></div>
+<div class="card stat"><small>OPERATIONAL</small><b id="operational">—</b><span class="muted">Ready / operational</span></div>
+<div class="card stat"><small>ATTENTION / OFFLINE</small><b id="attention">—</b><span class="muted">For checking / troubleshooting</span></div>
+<div class="card stat"><small>OFFLINE</small><b id="offline">—</b><span class="muted">For troubleshooting</span></div>
+<div class="card stat"><small>DATASET</small><b>28</b><span class="muted">Downstream of Magat Dam</span></div>
+</section>
+
+<section class="grid dashboard">
+<div class="card section"><h3>🗺️ Interactive Telemetry / Weather Station Map</h3>
+<div class="controls"><input id="search" placeholder="Search station, municipality or type…"><select id="statusFilter"><option value="">All Status</option><option>OPERATIONAL</option><option>OFFLINE</option></select><select id="typeFilter"><option value="">All Equipment Types</option></select></div>
+<div class="map"><div id="map"></div></div></div>
+
+<div class="card section"><h3>📋 Station Inventory</h3>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Station</th><th>Location</th><th>Type</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="note">Source: NIA Downstream of Magat Dam equipment inventory, updated August 28, 2026. Coordinates are plotted from the supplied inventory. Live telemetry readings are not fabricated.</div></div>
+</section>
+
+<section class="card section" style="margin-top:13px"><h3>🇵🇭 National Coverage Structure</h3>
+<div id="regions" class="grid regions"></div>
+<div class="note">This V5 is structured for consolidation of CAR, Regions I–XIII, MARIIS and UPRIIS. Additional verified inventories can be added without changing the portal architecture.</div>
+</section>
+</main>
+<footer><span>NIA FFWS Monitoring Portal • National Telemetry System Consolidated Inventory • V5</span><span>Powered by INONGZKY</span></footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="stations.js"></script>
+<script>
+const map=L.map('map').setView([16.86,121.68],9);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
+const markers=L.layerGroup().addTo(map);
+const search=document.getElementById('search'), statusFilter=document.getElementById('statusFilter'), typeFilter=document.getElementById('typeFilter');
+const types=[...new Set(STATIONS.map(s=>s.type))].sort(); types.forEach(t=>typeFilter.insertAdjacentHTML('beforeend',`<option>${t}</option>`));
+const regions=['CAR','Region I','Region II','Region III','Region IV-A','Region IV-B','Region V','Region VI','Region VII','Region VIII','Region IX','Region X','Region XI','Region XII','Region XIII','MARIIS','UPRIIS'];
+document.getElementById('regions').innerHTML=regions.map(x=>`<div class="card region"><b>${x}</b><span class="muted">Inventory records: —</span></div>`).join('');
+
+function cls(s){return s==='OPERATIONAL'?'op':s==='OFFLINE'?'off':'att'}
+function popup(s){return `<b>${s.name}</b><br>${s.location}<br><br><b>Type:</b> ${s.type}<br><b>Telemetry:</b> ${s.telemetry}<br><b>Fund:</b> ${s.fund}<br><b>Status:</b> ${s.status}<br><b>Expiry:</b> ${s.subscription}<br><b>Remarks:</b> ${s.remarks}<br><small>${s.lat.toFixed(6)}, ${s.lon.toFixed(6)}</small>`}
+function render(){
+ const q=search.value.toLowerCase().trim(), st=statusFilter.value, ty=typeFilter.value;
+ const list=STATIONS.filter(s=>(!q || (s.name+' '+s.location+' '+s.type+' '+s.telemetry).toLowerCase().includes(q))&&(!st||s.status===st)&&(!ty||s.type===ty));
+ document.getElementById('tbody').innerHTML=list.map(s=>`<tr><td>${s.id}</td><td><b>${s.name}</b></td><td>${s.location}</td><td>${s.type}</td><td><span class="status ${cls(s.status)}">${s.status}</span></td></tr>`).join('');
+ markers.clearLayers(); list.forEach(s=>L.circleMarker([s.lat,s.lon],{radius:7,weight:2,fillOpacity:.88}).bindPopup(popup(s)).addTo(markers));
+ document.getElementById('total').textContent=STATIONS.length;
+ document.getElementById('operational').textContent=STATIONS.filter(s=>s.status==='OPERATIONAL').length;
+ document.getElementById('offline').textContent=STATIONS.filter(s=>s.status==='OFFLINE').length;
+ document.getElementById('attention').textContent=STATIONS.filter(s=>s.status!=='OPERATIONAL').length;
+}
+[search,statusFilter,typeFilter].forEach(e=>e.addEventListener('input',render)); render();
+</script>
+</body></html>
