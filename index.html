@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="application-name" content="NIA FFWS National GIS Portal">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#032315"><title>NIA FFWS | National Telemetry GIS</title>
+<link rel="icon" href="nia-logo.png"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+:root{--nav:#062744;--nav2:#0d6f99;--cyan:#16a7dc;--green:#16b36b;--red:#e84d58;--amber:#e6a52e;--ink:#102f47;--muted:#718596;--line:#d9e5eb;--bg:#eef4f8;--card:#fff;--shadow:0 12px 35px rgba(11,49,76,.10)}*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}body{overflow:hidden}.top{height:72px;color:#fff;display:flex;align-items:center;padding:0 20px;gap:14px;position:relative;z-index:3000;background:linear-gradient(110deg,#052746,#0a4d73 58%,#1682a6);box-shadow:0 5px 24px rgba(0,31,52,.35);overflow:hidden}.top:after{content:"";position:absolute;inset:-40px 20% auto -5%;height:95px;background:repeating-linear-gradient(165deg,transparent 0 20px,rgba(38,190,235,.18) 21px 23px,transparent 24px 38px);transform:skewX(-18deg);pointer-events:none}.logo-wrap{width:50px;height:50px;position:relative;z-index:1;display:grid;place-items:center;perspective:500px}.brand-logo{width:48px;height:48px;object-fit:contain;animation:spinLogo 7s linear infinite;filter:drop-shadow(0 5px 8px rgba(0,0,0,.35))}.brand{position:relative;z-index:1}.brand h1{font-size:16px;letter-spacing:.01em;margin:0;font-weight:850}.brand p{font-size:9px;opacity:.82;margin:4px 0 0}.top-search{position:relative;z-index:1;margin-left:auto;width:270px;height:38px;border:1px solid rgba(255,255,255,.24);background:rgba(0,35,59,.24);border-radius:999px;display:flex;align-items:center;padding:0 13px;gap:8px}.top-search span{font-size:14px}.top-search input{background:transparent;border:0;outline:0;color:#fff;width:100%;font-size:11px}.top-search input::placeholder{color:#d8eaf2}.notify{position:relative;z-index:1;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;font-size:16px}.notify b{position:absolute;right:4px;top:4px;width:7px;height:7px;background:#ff4d5e;border-radius:50%;box-shadow:0 0 0 3px #0b4d73}.badge{position:relative;z-index:1;font-size:9px;font-weight:900;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 11px;margin-left:2px;white-space:nowrap}.layout{display:grid;grid-template-columns:310px 1fr;height:calc(100vh - 72px)}.sidebar{background:#fff;border-right:1px solid var(--line);overflow:auto;padding:16px 14px}.side-title{font-size:10px;text-transform:uppercase;font-weight:900;color:#718392;letter-spacing:.08em;margin:6px 7px 9px}.navitem{width:100%;text-align:left;border:0;background:#fff;border-radius:12px;padding:11px 12px;margin:3px 0;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;font-size:12px;transition:.2s}.navitem:hover{background:#f1f8fb;transform:translateX(2px)}.navitem.active{background:linear-gradient(90deg,#e4f5fb,#f2faff);color:#075e86;font-weight:850;box-shadow:inset 3px 0 0 var(--cyan)}.dot{width:9px;height:9px;border-radius:50%;background:#a6bac4;box-shadow:0 0 0 3px #edf3f5;flex:none}.active .dot{background:var(--cyan);box-shadow:0 0 0 3px #d9f3fa}.side-note{margin:15px 3px 0;padding:12px;background:#f2f9fc;border:1px solid #dceff5;border-left:3px solid var(--cyan);border-radius:9px;font-size:9px;line-height:1.55;color:#607684}.content{min-width:0;overflow:auto}.hero{padding:18px 22px 12px;background:linear-gradient(120deg,#edf7fb,#fff)}.hero h2{margin:0;font-size:25px;letter-spacing:-.02em;color:var(--nav)}.hero p{margin:5px 0 0;color:var(--muted);font-size:11px}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:10px 22px 14px;background:#f5f9fb}.metric{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);min-height:92px;display:flex;align-items:center;gap:12px}.metric-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:#eaf6fb}.metric small{font-size:8px;color:var(--muted);font-weight:900;letter-spacing:.04em}.metric b{display:block;font-size:23px;line-height:1;margin-top:4px}.metric span{font-size:8px;color:var(--muted)}.ring{margin-left:auto;width:42px;height:42px;border-radius:50%;background:conic-gradient(var(--cyan) 0 50%,#e8eef2 50%);display:grid;place-items:center;flex:none}.ring:after{content:"";width:29px;height:29px;border-radius:50%;background:#fff}.workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(380px,.85fr);gap:12px;padding:0 22px 16px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:12px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}.panel-head h3{margin:0;font-size:13px}.panel-head small{color:var(--muted);font-size:9px}.toolbar{padding:10px;display:grid;grid-template-columns:1.45fr .75fr .75fr auto;gap:8px;background:#fbfdfe;border-bottom:1px solid var(--line)}input,select{width:100%;height:38px;padding:0 11px;border:1px solid #cfdee5;border-radius:9px;background:#fff;color:var(--ink);font-size:11px;outline:0;transition:.2s}input:focus,select:focus{border-color:#70c2dc;box-shadow:0 0 0 3px #dff4fa}.mapbox{height:calc(100vh - 330px);min-height:520px;position:relative}#map{height:100%;width:100%}.leaflet-container{font:11px Inter,Segoe UI,Arial,sans-serif}.leaflet-control-zoom{border:0!important;box-shadow:0 6px 20px #0002!important}.leaflet-control-zoom a{color:#0b3550!important}.map-actions{position:absolute;right:12px;top:12px;z-index:900;display:flex;gap:7px}.map-btn{border:1px solid #d4e2e8;background:#fff;border-radius:9px;padding:8px 10px;box-shadow:0 6px 18px #0002;color:#0b4563;font-weight:800;font-size:9px;cursor:pointer}.map-btn:hover{background:#f0f9fc}.export-btn{height:38px;white-space:nowrap}.nav-count{margin-left:auto;font-size:10px;color:#176887;font-variant-numeric:tabular-nums}.layer-note{font-size:9px;color:var(--muted);padding:6px 10px;background:#f7fbfd;border-bottom:1px solid var(--line)}.legend{position:absolute;bottom:15px;left:15px;background:#fff;padding:9px 11px;border-radius:10px;box-shadow:0 6px 20px #0002;z-index:900;font-size:9px}.legend div{margin:3px 0}.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.list{max-height:calc(100vh - 330px);min-height:520px;overflow:auto}.station{padding:12px 14px;border-bottom:1px solid #edf2f5;cursor:pointer;transition:.18s}.station:hover{background:#f8fcfe;transform:translateX(1px)}.station-top{display:flex;justify-content:space-between;gap:8px}.station-name{font-weight:850;font-size:11px;line-height:1.3}.station-loc{font-size:9px;color:var(--muted);margin-top:4px}.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.chip{font-size:8px;padding:4px 7px;border-radius:999px;background:#eef4f6;color:#526a75}.status{font-size:8px;font-weight:900;padding:5px 7px;border-radius:6px;white-space:nowrap;height:max-content}.op{background:#e6f8ee;color:#08723c}.off{background:#fde9eb;color:#a72c36}.att{background:#fff2d8;color:#8c6200}.detail{display:none;padding:15px}.detail.show{display:block}.back{border:0;background:#eef6f9;color:#075e86;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer}.detail h3{font-size:18px;margin:12px 0 3px}.detail p{font-size:10px;color:var(--muted);margin:0 0 12px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.fact{border:1px solid var(--line);border-radius:8px;padding:8px}.fact small{display:block;color:var(--muted);font-size:8px}.fact b{font-size:10px}.coverage{padding:0 22px 18px}.coverage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.area{padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;transition:.18s}.area:hover{border-color:#8bc6da;transform:translateY(-1px);box-shadow:0 7px 18px #0a5a7810}.area b{font-size:11px;color:#0a648c}.area span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.footer{background:var(--nav);color:#c9dbe4;padding:12px 22px;font-size:9px;display:flex;justify-content:space-between;gap:10px}.empty{height:100%;display:grid;place-items:center;color:#8a9ba5;font-size:11px;padding:40px;text-align:center}.popup-title{font-weight:900;font-size:14px}.popup-sub{color:#718596;margin-top:3px}.popup-grid{margin-top:8px;display:grid;grid-template-columns:auto 1fr;gap:4px 9px}.popup-grid b{font-weight:800}.popup-grid span{color:#314c5f}.leaflet-popup-content-wrapper{border-radius:13px;box-shadow:0 12px 35px #06274425}.leaflet-popup-content{margin:13px 14px}.pulse-marker{box-shadow:0 0 0 0 rgba(22,179,107,.6);animation:pulse 1.7s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,179,107,.55)}50%{box-shadow:0 0 0 9px rgba(22,179,107,0)}}@keyframes spinLogo{0%{transform:rotateY(0deg)}50%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+@media(max-width:1150px){.layout{grid-template-columns:250px}.workspace{grid-template-columns:1fr}.list{max-height:500px}.mapbox{height:520px}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){body{overflow:auto}.top-search{display:none}.layout{display:block;height:auto}.sidebar{position:sticky;top:72px;z-index:1000;display:flex;gap:5px;overflow:auto;padding:8px}.side-title,.side-note{display:none}.navitem{min-width:max-content;width:auto;margin:0}.hero{padding:15px 12px}.metrics{padding:10px;grid-template-columns:repeat(2,1fr)}.workspace,.coverage{padding-left:10px;padding-right:10px}.toolbar{grid-template-columns:1fr}.mapbox{min-height:440px;height:58vh}.coverage-grid{grid-template-columns:repeat(2,1fr)}.facts{grid-template-columns:1fr}.badge{display:none}}
+
+/* V7 ULTRA-PREMIUM COMMAND CENTER THEME */
+:root{--nav:#031225;--nav2:#062849;--cyan:#19c7ff;--green:#00e6a0;--red:#ff526b;--amber:#ffc247;--ink:#e7f6ff;--muted:#8fb1c9;--line:rgba(76,190,245,.22);--bg:#020b17;--card:rgba(5,25,46,.94);--shadow:0 0 0 1px rgba(25,199,255,.06),0 12px 34px rgba(0,0,0,.34)}
+html,body{background:radial-gradient(ellipse at 65% -10%,#0b3658 0%,#041528 42%,#020914 100%);color:var(--ink)}
+.top{height:78px;padding:0 22px;background:linear-gradient(105deg,#020b18 0%,#062543 56%,#03172a 100%);border-bottom:1px solid rgba(25,199,255,.65);box-shadow:0 6px 28px #0008,0 1px 14px #00bfff20;}
+.top:after{opacity:.8;background:repeating-linear-gradient(165deg,transparent 0 22px,rgba(25,199,255,.12) 23px 25px,transparent 26px 42px)}
+.logo-wrap{width:54px;height:54px;border:1px solid #00e6a077;border-radius:50%;box-shadow:0 0 20px #00e6a033,inset 0 0 12px #00e6a022}.brand-logo{width:46px;height:46px;filter:drop-shadow(0 0 9px #00e6a0aa)}.brand h1{font-size:17px;letter-spacing:.045em;text-shadow:0 0 18px #19c7ff2a}.brand p{font-size:10px;color:#a9d6ed;letter-spacing:.04em}
+.badge{background:#002e3a;color:#70ffce;border-color:#00e6a077;box-shadow:0 0 15px #00e6a01c}
+.layout{grid-template-columns:260px 1fr;height:calc(100vh - 78px)}
+.sidebar{background:linear-gradient(180deg,rgba(4,24,44,.98),rgba(2,14,28,.98));border-right:1px solid rgba(25,199,255,.28);padding:14px 12px;box-shadow:8px 0 30px #0002}
+.side-title{color:#48d8ff;letter-spacing:.13em;font-size:10px}.navitem{background:transparent;color:#d7eaf7;border:1px solid transparent;border-radius:9px;padding:9px 10px;font-size:11px;margin:2px 0}.navitem:hover{background:#0b2b46;border-color:#1b8cb755;transform:translateX(2px)}.navitem.active{background:linear-gradient(90deg,#063b61,#082744);color:#fff;border:1px solid #0aaef0a8;box-shadow:inset 3px 0 #17caff,0 0 16px #008dca20}.dot{background:#638aa5;box-shadow:0 0 0 3px #102c43}.active .dot{background:#20d5ff;box-shadow:0 0 10px #20d5ff}.nav-count{color:#eafaff;background:#0b3150;border:1px solid #1b83b255;padding:3px 7px;border-radius:7px}.active .nav-count{background:#007db3;border-color:#36d8ff}
+.side-note{background:#06223a;border-color:#14506d;border-left-color:#16caff;color:#9fc6dd}
+.content{background:transparent}.hero{background:linear-gradient(100deg,rgba(5,26,48,.95),rgba(4,18,34,.65));padding:16px 20px 10px;border-bottom:1px solid #164565}.hero h2{color:#e8f8ff;font-size:23px;letter-spacing:.01em}.hero p{color:#8eb7cf}
+.metrics{padding:12px 18px 14px;background:transparent;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.metric{background:linear-gradient(145deg,rgba(8,38,65,.96),rgba(4,20,38,.96));border:1px solid rgba(39,171,229,.5);border-radius:12px;box-shadow:0 8px 25px #0003,inset 0 1px #ffffff08;min-height:88px}.metric-icon{background:#003c5d;color:#6be4ff;box-shadow:0 0 18px #00aaff20}.metric small{color:#a9cde0;letter-spacing:.09em}.metric b{color:#f1fbff;font-size:25px;text-shadow:0 0 16px #15c9ff24}.metric span{color:#86adc5}.ring{background:conic-gradient(var(--cyan) 0 50%,#17364c 50%);box-shadow:0 0 12px #00aaff20}.ring:after{background:#08223b}
+.workspace{gap:12px;padding:0 18px 14px;grid-template-columns:minmax(0,1.55fr) minmax(320px,.85fr)}.panel{background:linear-gradient(145deg,rgba(5,25,45,.98),rgba(3,17,32,.98));border:1px solid rgba(30,174,231,.45);border-radius:13px;box-shadow:var(--shadow);color:#e7f6ff}.panel-head{border-bottom:1px solid rgba(58,169,218,.22);background:linear-gradient(90deg,#082a47,#061c33);padding:12px 14px}.panel-head h3{color:#eafaff;font-size:12px}.panel-head small{color:#8fb8d0}.toolbar{background:#04192c;border-bottom:1px solid #16415c;grid-template-columns:1.45fr .75fr .85fr auto}.toolbar input,.toolbar select{background:#061c31;color:#e7f6ff;border:1px solid #20506d}.toolbar input::placeholder{color:#789db6}.toolbar input:focus,.toolbar select:focus{border-color:#19c7ff;box-shadow:0 0 0 3px #19c7ff20}.mapbox{height:calc(100vh - 345px);min-height:450px;background:#031326}.leaflet-container{background:#031326;color:#eaf8ff}.leaflet-control-layers,.leaflet-bar{background:#061e34!important;color:#e8f7ff!important;border:1px solid #1d6588!important;box-shadow:0 5px 20px #0008!important}.leaflet-control-layers label{color:#e8f7ff}.leaflet-control-layers-separator{border-top-color:#1c4b67!important}.leaflet-control-zoom a{background:#06233b!important;color:#7de8ff!important;border-bottom-color:#1b4b68!important}.map-btn{background:#06243c;border:1px solid #2b83a7;color:#b7efff;box-shadow:0 4px 18px #0006}.map-btn:hover{background:#0b3a5a;color:#fff;border-color:#20caff}.legend{background:rgba(3,21,39,.94);border:1px solid #22617f;color:#d7efff;box-shadow:0 5px 20px #0007}.legend i{box-shadow:0 0 8px currentColor}.list{background:transparent}.station{border-bottom:1px solid rgba(63,139,177,.18);color:#e4f4ff}.station:hover{background:#082a45;transform:translateX(2px)}.station-name{color:#f0fbff}.station-loc{color:#8db4cb}.chip{background:#0b2c46;color:#a8d0e5;border:1px solid #174765}.status.op{background:#063c34;color:#55ffd0;border:1px solid #00dba055}.status.off{background:#471d2a;color:#ff9cab;border:1px solid #ff526b55}.status.att{background:#46361a;color:#ffdc81;border:1px solid #ffc24755}.detail{color:#e7f6ff}.back{background:#0b3451;color:#79dfff;border:1px solid #1a7094}.fact{border-color:#1a4c69;background:#061b30}.fact small{color:#8db3cb}.fact b{color:#eaf9ff}.coverage{padding:0 18px 18px}.coverage .panel{background:linear-gradient(145deg,#061e35,#031326)}.area{background:#061d32;border-color:#194661;color:#e7f6ff}.area:hover{background:#0a2e4b;border-color:#19c7ff;box-shadow:0 0 18px #00bfff12}.area b{color:#6cdeff}.area span{color:#8db3ca}.footer{background:#020d1b;border-top:1px solid #12405d;color:#8eb9d2}.empty{color:#8eafc5}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#061d32;color:#e7f6ff;border:1px solid #1e6688}.popup-sub{color:#91b7ce}.popup-grid span{color:#b4d1e3}.popup-grid b{color:#e7f8ff}.leaflet-popup-content hr{border-top-color:#1a4a64!important}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,230,160,.7)}50%{box-shadow:0 0 0 10px rgba(0,230,160,0)}}
+@media(max-width:1150px){.layout{grid-template-columns:225px}.workspace{grid-template-columns:1fr}.list{max-height:500px}.mapbox{height:520px}.metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.top{height:70px;padding:0 12px}.layout{height:auto}.sidebar{top:70px;background:#031528}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}.workspace,.coverage{padding-left:10px;padding-right:10px}.toolbar{grid-template-columns:1fr}.mapbox{min-height:440px;height:58vh}.hero h2{font-size:19px}.brand h1{font-size:14px}.brand p{font-size:8px}.logo-wrap{width:44px;height:44px}.brand-logo{width:38px;height:38px}.metric{padding:10px;min-height:78px}.metric b{font-size:22px}}
+
+
+/* V8 GREEN DIGITAL COMMAND CENTER — animated, NIA-inspired palette */
+:root{--nav:#031b12;--nav2:#075b35;--cyan:#4dffad;--green:#20df82;--red:#ff5968;--amber:#ffd34d;--ink:#e5fff1;--muted:#8cb9a2;--line:rgba(52,255,163,.28);--bg:#020d09;--card:rgba(3,29,19,.94);--shadow:0 0 0 1px rgba(31,255,151,.05),0 10px 30px rgba(0,0,0,.32),0 0 22px rgba(0,255,130,.07)}
+html,body{background:#020d09;color:#e5fff1}
+body{position:relative;isolation:isolate;background:radial-gradient(ellipse at 50% 0%,rgba(0,126,65,.22),transparent 55%),#020d09}
+#digitalCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.62}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(rgba(0,255,135,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,135,.045) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 88%);animation:gridDrift 22s linear infinite}
+body:after{content:"";position:fixed;left:0;right:0;top:-20%;height:18%;z-index:5;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,255,135,.045),rgba(0,255,135,.12),transparent);animation:scanSweep 11s linear infinite}
+.top{background:linear-gradient(105deg,rgba(1,20,12,.98),rgba(2,57,31,.96) 58%,rgba(3,91,48,.96));border-bottom:1px solid rgba(59,255,161,.48);box-shadow:0 5px 26px #0008,0 0 26px #00ff8a12}
+.top:after{background:repeating-linear-gradient(165deg,transparent 0 20px,rgba(39,255,153,.15) 21px 23px,transparent 24px 38px)}
+.brand-logo{filter:drop-shadow(0 0 7px rgba(31,255,142,.75));animation:spinLogo 10s linear infinite,logoGlow 3s ease-in-out infinite}
+.badge{border-color:rgba(63,255,167,.55);color:#8dffd0;background:rgba(0,255,128,.07);box-shadow:inset 0 0 14px #00ff8010}
+.top-search{border-color:#1d9b63;background:rgba(0,15,9,.55)}.top-search:focus-within{box-shadow:0 0 0 2px #20df8240,0 0 18px #20df8230}
+.notify{border-color:#1d9b63;background:#052719;color:#b8ffdb}.notify b{box-shadow:0 0 0 3px #073b25}
+.layout{background:transparent}.sidebar{background:linear-gradient(180deg,rgba(2,22,14,.98),rgba(2,15,10,.97));border-right:1px solid #145c3b;box-shadow:inset -8px 0 24px #00ff8005}
+.side-title{color:#4dffad;text-shadow:0 0 10px #00ff8030}.navitem{background:transparent;color:#d6f9e6;border:1px solid transparent}.navitem:hover{background:#073a25;border-color:#126b43}.navitem.active{background:linear-gradient(90deg,rgba(0,255,135,.19),rgba(3,54,32,.74));color:#baffd9;box-shadow:inset 3px 0 0 #4dffad,0 0 18px #00ff8010;border:1px solid #16764b}.dot{background:#477e65;box-shadow:0 0 0 3px #0a2c1c}.active .dot{background:#4dffad;box-shadow:0 0 10px #4dffad,0 0 0 3px #0d4b2e}.nav-count{color:#8dffd0;background:#073722;border:1px solid #176944;border-radius:7px;padding:3px 6px}
+.side-note{background:#05291a;border-color:#145c3b;border-left-color:#4dffad;color:#a8d9bd}
+.content{background:rgba(1,12,8,.25)}.hero{background:linear-gradient(120deg,rgba(2,27,17,.96),rgba(4,38,23,.82));border-bottom:1px solid #124a30}.hero h2{color:#b8ffda;text-shadow:0 0 18px #00ff8018}.hero p{color:#8fbea4}
+.metrics{background:rgba(2,15,10,.56)}.metric,.panel{background:linear-gradient(145deg,rgba(4,34,22,.97),rgba(2,20,13,.97));border-color:#176640;box-shadow:var(--shadow)}.metric{position:relative;overflow:hidden}.metric:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,#24ff9a,transparent);opacity:.65}.metric-icon{background:#073e27;color:#8dffd0;box-shadow:inset 0 0 12px #00ff8010}.metric small,.metric span{color:#8dbca2}.metric b{color:#f0fff6;text-shadow:0 0 12px #20df8220}.ring:after{background:#052217}.panel-head{border-bottom-color:#155436;background:linear-gradient(90deg,rgba(5,47,29,.92),rgba(2,27,17,.86))}.panel-head h3{color:#d8ffeb}.panel-head small{color:#82b99a}
+.toolbar{background:rgba(2,20,13,.96);border-bottom-color:#155436}input,select{background:#031b11;color:#e3fff0;border-color:#1a7148}input::placeholder{color:#78a88d}input:focus,select:focus{border-color:#4dffad;box-shadow:0 0 0 3px #20df8228,0 0 16px #20df821a}
+.mapbox{border-top:1px solid #124c31}#map{background:#031c12}.leaflet-control-layers,.leaflet-bar{background:#031c12!important;color:#dcffeb!important;border:1px solid #1a7148!important;box-shadow:0 5px 20px #0009!important}.leaflet-control-layers label{color:#dcffeb}.leaflet-control-layers-separator{border-top-color:#1a5738!important}.leaflet-control-zoom a{background:#052719!important;color:#79ffc0!important;border-bottom-color:#155436!important}.map-btn{background:#042719;border:1px solid #218252;color:#aaffd0;box-shadow:0 4px 18px #0007}.map-btn:hover{background:#0a3b26;color:#fff;border-color:#4dffad}.legend{background:rgba(2,24,15,.96);border:1px solid #1b6d45;color:#d7ffea;box-shadow:0 5px 20px #0008}.legend i{box-shadow:0 0 8px currentColor}
+.list{background:transparent}.station{border-bottom:1px solid rgba(43,160,101,.22);color:#e4fff0}.station:hover{background:#06351f;transform:translateX(2px)}.station-name{color:#effff6}.station-loc{color:#8fbea4}.chip{background:#062d1c;color:#a8e4bf;border:1px solid #145638}.status.op{background:#063b27;color:#6affb2;border:1px solid #20df8266}.status.off{background:#471d27;color:#ff9cab;border:1px solid #ff526b66}.status.att{background:#403416;color:#ffe08a;border:1px solid #ffc24766}.detail{color:#e7fff1}.back{background:#07351f;color:#86ffc2;border:1px solid #1a7148}.fact{border-color:#155436;background:#031b11}.fact small{color:#8fbea4}.fact b{color:#eafff2}.coverage .panel{background:linear-gradient(145deg,#052719,#02140c)}.area{background:#042316;border-color:#155436;color:#e7fff1}.area:hover{background:#073b25;border-color:#4dffad;box-shadow:0 0 18px #00ff8015}.area b{color:#81ffc0}.area span{color:#8fbea4}.footer{background:#010b07;border-top:1px solid #145c3b;color:#8fbea4}.empty{color:#8fbea4}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#042316;color:#e7fff1;border:1px solid #1c7047}.popup-sub{color:#8fbea4}.popup-grid span{color:#b7e5c9}.popup-grid b{color:#e7fff1}.leaflet-popup-content hr{border-top-color:#155436!important}
+.pulse-marker{animation:pulse 1.7s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(32,223,130,.72)}50%{box-shadow:0 0 0 10px rgba(32,223,130,0)}}@keyframes gridDrift{from{background-position:0 0,0 0}to{background-position:0 380px,380px 0}}@keyframes scanSweep{0%{transform:translateY(0);opacity:0}10%{opacity:.7}90%{opacity:.45}100%{transform:translateY(700%);opacity:0}}@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 5px rgba(31,255,142,.45))}50%{filter:drop-shadow(0 0 12px rgba(31,255,142,.95))}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+
+/* STORM data bridge panel: blue/cyan accents on the existing command-center theme */
+.storm-section{padding:14px 18px 16px;background:rgba(2,15,10,.45)}
+.storm-panel{border:1px solid rgba(25,199,255,.42);border-radius:14px;overflow:hidden;background:linear-gradient(135deg,rgba(3,28,49,.98),rgba(3,19,33,.98));box-shadow:0 0 22px rgba(0,174,255,.08)}
+.storm-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid rgba(25,199,255,.22);background:linear-gradient(90deg,rgba(3,52,80,.85),rgba(2,26,44,.8))}
+.storm-head h3{font-size:13px;margin:0;color:#e8f8ff}.storm-head p{font-size:9px;margin:4px 0 0;color:#92bfd4}.storm-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.storm-btn{border:1px solid #167da5;border-radius:8px;background:#062d46;color:#b9efff;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}.storm-btn:hover{background:#084365;border-color:#19c7ff}.storm-body{padding:13px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.dam-card{border:1px solid rgba(25,199,255,.27);border-radius:11px;background:rgba(3,22,39,.86);overflow:hidden}.dam-title{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 12px;border-bottom:1px solid rgba(25,199,255,.17)}.dam-title b{font-size:12px;color:#e8faff}.dam-title small{font-size:8px;color:#8eb7ce;text-align:right}.storm-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:10px}.storm-value{padding:9px 8px;border-radius:8px;background:rgba(6,45,68,.75);border:1px solid rgba(25,199,255,.16);min-width:0}.storm-value small{display:block;font-size:8px;color:#8db6cb;line-height:1.3;min-height:20px}.storm-value strong{display:block;font-size:18px;color:#6ce5ff;line-height:1.2;margin-top:4px;overflow-wrap:anywhere}.storm-value em{display:block;font-size:8px;color:#83adbf;font-style:normal;margin-top:3px}.storm-meta{padding:0 11px 11px;font-size:9px;color:#8fb9cd;line-height:1.5}.storm-status{font-size:8px;font-weight:900;letter-spacing:.03em;border:1px solid #7b642b;color:#ffdf8a;background:#382d12;border-radius:999px;padding:5px 7px;white-space:nowrap}.storm-status.loaded{border-color:#1683a5;color:#91eaff;background:#07364c}.storm-empty{padding:12px;font-size:10px;line-height:1.55;color:#9bc2d6}.storm-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid rgba(25,199,255,.18);padding:10px 13px;font-size:9px;color:#8fb9cd}.storm-foot strong{color:#b6eaff}.storm-hidden{display:none!important}.storm-file{max-width:230px;font-size:9px;color:#b8eaff}.storm-file::file-selector-button{background:#07334d;color:#c5f3ff;border:1px solid #167da5;border-radius:7px;padding:7px;margin-right:7px}
+@media(max-width:720px){.storm-section{padding:10px}.storm-head{align-items:flex-start;flex-direction:column}.storm-body{grid-template-columns:1fr}.storm-values{grid-template-columns:repeat(3,minmax(0,1fr))}.storm-value strong{font-size:16px}.storm-file{max-width:100%}}
+
+
+/* V10 DAM PHOTO BANNERS — blue digital command center */
+.dam-photo{
+  height:clamp(120px,13vw,188px); position:relative; overflow:hidden;
+  background-size:cover; background-position:center 48%;
+  border-bottom:1px solid rgba(25,199,255,.48);
+  isolation:isolate;
+}
+.dam-photo:before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg,rgba(1,12,28,.92) 0%,rgba(2,20,39,.58) 48%,rgba(1,12,28,.12) 100%),
+             linear-gradient(0deg,rgba(0,10,22,.85),transparent 68%);
+}
+.dam-photo:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 35%,rgba(25,199,255,.18) 50%,transparent 65%);
+  transform:translateX(-100%);animation:damSweep 8s ease-in-out infinite;
+}
+.dam-photo.magat{background-image:url('magat-dam-banner.jpg')}
+.dam-photo.pantabangan{background-image:url('pantabangan-dam-banner.jpg')}
+.dam-photo-copy{position:absolute;left:16px;right:16px;bottom:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.dam-photo-copy h4{margin:0;font-size:clamp(18px,1.6vw,27px);font-weight:950;letter-spacing:.035em;color:#f0fbff;text-shadow:0 2px 14px #000}
+.dam-photo-copy p{margin:4px 0 0;font-size:10px;color:#bcecff;text-shadow:0 2px 10px #000}
+.dam-photo-tag{display:inline-flex;align-items:center;gap:6px;border:1px solid #19c7ff99;background:rgba(2,31,54,.82);backdrop-filter:blur(6px);border-radius:999px;padding:7px 10px;font-size:9px;font-weight:900;color:#9cecff;white-space:nowrap}
+.dam-photo-tag i{width:7px;height:7px;border-radius:50%;background:#19c7ff;box-shadow:0 0 10px #19c7ff;display:inline-block}
+.dam-title{background:linear-gradient(90deg,rgba(4,36,61,.94),rgba(2,21,39,.92))}
+.dam-card{box-shadow:inset 0 0 24px rgba(0,174,255,.05),0 0 16px rgba(0,174,255,.045)}
+@keyframes damSweep{0%,18%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+@media(max-width:720px){
+ .dam-photo{height:145px}
+ .dam-photo-copy{left:12px;right:12px;bottom:11px}
+ .dam-photo-copy h4{font-size:20px}
+ .dam-photo-copy p{font-size:9px}
+ .dam-photo-tag{padding:6px 8px;font-size:8px}
+}
+
+
+/* V11 INTERNATIONAL GIS MAP — dark cartography, marker clusters, neon telemetry */
+.mapbox{isolation:isolate;background:#020c19}
+#map{background:#041426}
+.leaflet-container{background:#041426;color:#e8f8ff}
+.leaflet-control-layers,.leaflet-control-scale-line,.leaflet-bar{
+  background:rgba(3,20,38,.96)!important;color:#e6f8ff!important;
+  border:1px solid rgba(25,199,255,.45)!important;border-radius:9px!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 14px rgba(25,199,255,.08)!important
+}
+.leaflet-control-layers label{color:#d9f4ff!important;font-size:11px}
+.leaflet-control-layers-separator{border-top-color:#1b4e6c!important}
+.leaflet-control-scale-line{color:#b9eaff!important;border-color:#7bdfff!important;text-shadow:none!important}
+.leaflet-control-zoom{overflow:hidden;border-radius:10px!important}
+.leaflet-control-zoom a{background:#06243d!important;color:#78e8ff!important;border-bottom:1px solid #1a5575!important}
+.leaflet-control-zoom a:hover{background:#0a3c5d!important}
+.leaflet-control-attribution{background:rgba(2,13,26,.78)!important;color:#8dbbd2!important;font-size:9px!important}
+.leaflet-control-attribution a{color:#4ed8ff!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#061d32!important;color:#e7f6ff!important;border:1px solid #1e6688}
+.leaflet-popup-content-wrapper{box-shadow:0 10px 35px #0009,0 0 18px #00bfff15}
+.leaflet-popup-content{margin:13px 14px}
+.popup-sub{color:#8fb9d2!important}
+.popup-grid span{color:#b8d9e9!important}
+.popup-grid b{color:#effaff!important}
+.leaflet-popup-content hr{border-top-color:#1a4a64!important}
+.telemetry-marker-host{background:transparent!important;border:0!important}.telemetry-cluster-host{background:transparent!important;border:0!important}.telemetry-marker-wrap{width:24px;height:24px;display:grid;place-items:center;position:relative}
+.telemetry-marker{
+  width:13px;height:13px;border:2px solid #effbff;border-radius:50%;
+  display:block;box-shadow:0 0 0 3px rgba(25,199,255,.16),0 0 12px currentColor;
+  position:relative;z-index:2
+}
+.telemetry-marker.operational{background:#25e7a0;color:#25e7a0}
+.telemetry-marker.offline{background:#ff526b;color:#ff526b}
+.telemetry-marker.attention{background:#ffc247;color:#ffc247}
+.telemetry-marker.operational:after{
+  content:"";position:absolute;inset:-6px;border:1px solid rgba(37,231,160,.72);
+  border-radius:50%;animation:telemetryPulse 2.1s ease-out infinite
+}
+.telemetry-cluster{
+  width:42px;height:42px;display:grid;place-items:center;border-radius:50%;
+  color:#eafaff;font-weight:900;font-size:12px;letter-spacing:-.02em;
+  border:1px solid rgba(107,229,255,.95);
+  background:radial-gradient(circle at 35% 25%,rgba(23,197,255,.85),rgba(2,51,87,.95) 65%);
+  box-shadow:0 0 0 5px rgba(25,199,255,.12),0 0 22px rgba(25,199,255,.48),inset 0 0 12px rgba(255,255,255,.14)
+}
+.telemetry-cluster.medium{border-color:#4ce4ff;background:radial-gradient(circle at 35% 25%,#0d8eb9,#05233f 70%);box-shadow:0 0 0 5px #19c7ff1f,0 0 22px #00bfff55}
+.telemetry-cluster.large{border-color:#6effd0;background:radial-gradient(circle at 35% 25%,#0c997b,#032b3b 70%);box-shadow:0 0 0 6px #00e6a01b,0 0 26px #00e6a055}
+.leaflet-marker-icon{transition:filter .18s ease}
+.leaflet-marker-icon:hover{filter:brightness(1.3)}
+.map-hud{
+  position:absolute;left:12px;top:12px;z-index:850;pointer-events:none;
+  padding:8px 11px;border:1px solid rgba(25,199,255,.36);border-radius:9px;
+  background:rgba(2,16,31,.88);backdrop-filter:blur(8px);color:#bfeeff;
+  box-shadow:0 5px 20px #0005;font-size:9px;letter-spacing:.035em
+}
+.map-hud strong{color:#e8faff;font-size:10px}
+.map-hud .hud-live{display:inline-block;width:6px;height:6px;border-radius:50%;background:#25e7a0;box-shadow:0 0 8px #25e7a0;margin-right:6px}
+.map-actions{top:12px;right:12px}
+@keyframes telemetryPulse{0%{transform:scale(.72);opacity:.95}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:720px){
+ .map-hud{top:auto;bottom:58px;left:10px;font-size:8px}
+ .leaflet-control-layers{max-width:180px}
+ .telemetry-cluster{width:36px;height:36px}
+}
+
+</style>
+<style id="v9-blue-digital-theme">
+/* V9 BLUE DIGITAL COMMAND CENTER */
+:root{--nav:#031225;--nav2:#06416b;--cyan:#19c7ff;--green:#00e6ff;--red:#ff526b;--amber:#ffc247;--ink:#e7f6ff;--muted:#8fb1c9;--line:rgba(45,185,255,.28);--bg:#020b17;--card:rgba(5,25,46,.96);--shadow:0 0 0 1px rgba(25,199,255,.06),0 12px 34px rgba(0,0,0,.34),0 0 22px rgba(0,160,255,.08)}
+html,body{background:radial-gradient(ellipse at 65% -10%,#0b3658 0%,#041528 42%,#020914 100%);color:var(--ink)}
+body{background:radial-gradient(ellipse at 50% 0%,rgba(0,126,220,.22),transparent 55%),#020b17}
+body:before{background:linear-gradient(rgba(25,199,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(25,199,255,.045) 1px,transparent 1px)}
+body:after{background:linear-gradient(180deg,transparent,rgba(25,199,255,.045),rgba(25,199,255,.12),transparent)}
+.top{background:linear-gradient(105deg,rgba(1,12,28,.98),rgba(3,48,83,.97) 58%,rgba(4,91,137,.96));border-bottom:1px solid rgba(25,199,255,.58);box-shadow:0 5px 26px #0008,0 0 26px #00aaff12}
+.top:after{background:repeating-linear-gradient(165deg,transparent 0 20px,rgba(39,204,255,.15) 21px 23px,transparent 24px 38px)}
+.logo-wrap{border-color:rgba(25,199,255,.45);box-shadow:0 0 20px #00aaff25,inset 0 0 12px #00aaff16}.brand-logo{filter:drop-shadow(0 0 7px rgba(25,199,255,.75))}
+.badge{border-color:rgba(25,199,255,.55);color:#9cecff;background:rgba(0,170,255,.08);box-shadow:inset 0 0 14px #00aaff10}
+.top-search{border-color:#1677a8;background:rgba(0,15,30,.55)}.top-search:focus-within{box-shadow:0 0 0 2px #19c7ff40,0 0 18px #19c7ff30}
+.notify{border-color:#1677a8;background:#05243c;color:#b8efff}.notify b{box-shadow:0 0 0 3px #07304d}
+.sidebar{background:linear-gradient(180deg,rgba(3,22,42,.98),rgba(2,13,28,.98));border-right:1px solid #14506f;box-shadow:inset -8px 0 24px #00aaff05}
+.side-title{color:#55d9ff;text-shadow:0 0 10px #00aaff30}.navitem{color:#d6efff}.navitem:hover{background:#073451;border-color:#126b93}.navitem.active{background:linear-gradient(90deg,rgba(0,174,255,.19),rgba(3,38,66,.8));color:#c6f5ff;box-shadow:inset 3px 0 0 #19c7ff,0 0 18px #00aaff10;border-color:#1676a6}.dot{background:#47758f;box-shadow:0 0 0 3px #0a263c}.active .dot{background:#19c7ff;box-shadow:0 0 10px #19c7ff,0 0 0 3px #0d3b5b}.nav-count{color:#9cecff;background:#07304c;border-color:#17618a}
+.side-note{background:#05243c;border-color:#14506f;border-left-color:#19c7ff;color:#a8d7ee}
+.content{background:rgba(1,9,20,.25)}.hero{background:linear-gradient(120deg,rgba(3,24,46,.96),rgba(4,30,52,.82));border-bottom:1px solid #124563}.hero h2{color:#c4f1ff;text-shadow:0 0 18px #00aaff18}.hero p{color:#8fbed9}
+.metrics{background:rgba(2,13,26,.56)}.metric,.panel{background:linear-gradient(145deg,rgba(4,31,55,.97),rgba(2,17,34,.97));border-color:#176083;box-shadow:var(--shadow)}.metric:before{background:linear-gradient(90deg,transparent,#19c7ff,transparent)}.metric-icon{background:#073653;color:#8de9ff;box-shadow:inset 0 0 12px #00aaff10}.metric small,.metric span{color:#8fb8d0}.metric b{color:#f0fbff;text-shadow:0 0 12px #19c7ff20}.ring{background:conic-gradient(var(--cyan) 0 50%,#17364c 50%)}.ring:after{background:#05213a}
+.panel-head{border-bottom-color:#15506d;background:linear-gradient(90deg,rgba(5,43,70,.94),rgba(2,25,46,.9))}.panel-head h3{color:#d8f6ff}.panel-head small{color:#82b8d6}
+.toolbar{background:rgba(2,18,34,.96);border-bottom-color:#15506d}input,select{background:#031b30;color:#e3f8ff;border-color:#1a668c}input::placeholder{color:#78a8c4}input:focus,select:focus{border-color:#19c7ff;box-shadow:0 0 0 3px #19c7ff28,0 0 16px #19c7ff1a}
+.mapbox{border-top:1px solid #124c70}#map{background:#031326}.leaflet-control-layers,.leaflet-bar{background:#031c32!important;color:#dcf7ff!important;border-color:#1a668c!important}.leaflet-control-layers label{color:#dcf7ff}.leaflet-control-layers-separator{border-top-color:#1a4f70!important}.leaflet-control-zoom a{background:#05263f!important;color:#79e7ff!important;border-bottom-color:#15506d!important}.map-btn{background:#04263e;border-color:#2180a9;color:#aaf0ff}.map-btn:hover{background:#0a3b5b;border-color:#19c7ff}.legend{background:rgba(2,20,38,.96);border-color:#1b668e;color:#d7f5ff}
+.station{border-bottom-color:rgba(43,160,220,.22);color:#e4f7ff}.station:hover{background:#06304d}.station-name{color:#effbff}.station-loc{color:#8fbed8}.chip{background:#062b45;color:#a8e4f8;border-color:#145675}.status.op{background:#06354b;color:#6be6ff;border-color:#20cfff66}.status.off{background:#471d2a;color:#ff9cab;border-color:#ff526b66}.status.att{background:#403416;color:#ffe08a;border-color:#ffc24766}.detail{color:#e7f6ff}.back{background:#073451;color:#86e9ff;border-color:#1a7199}.fact{border-color:#15506d;background:#031b30}.fact small{color:#8fbed8}.fact b{color:#eaf9ff}.coverage .panel{background:linear-gradient(145deg,#05263e,#021426)}.area{background:#04243a;border-color:#15506d;color:#e7f6ff}.area:hover{background:#073b5a;border-color:#19c7ff}.area b{color:#81e7ff}.area span{color:#8fbed8}.footer{background:#010a16;border-top:1px solid #12405d;color:#8eb9d8}.empty{color:#8eafc8}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#061d32;color:#e7f6ff;border-color:#1e6688}.popup-sub{color:#91bdd7}.popup-grid span{color:#b4d9eb}.popup-grid b{color:#e7f8ff}
+#digitalCanvas{opacity:.58}
+@media(max-width:720px){.sidebar{background:#031528}}
+</style>
+
+<style id="v11-international-gis-final">
+.mapbox{isolation:isolate;background:#020c19}
+#map{background:#041426}
+.leaflet-container{background:#041426;color:#e8f8ff}
+.leaflet-control-layers,.leaflet-control-scale-line,.leaflet-bar{
+ background:rgba(3,20,38,.96)!important;color:#e6f8ff!important;
+ border:1px solid rgba(25,199,255,.45)!important;border-radius:9px!important;
+ box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 14px rgba(25,199,255,.08)!important
+}
+.leaflet-control-layers label{color:#d9f4ff!important;font-size:11px}
+.leaflet-control-layers-separator{border-top-color:#1b4e6c!important}
+.leaflet-control-scale-line{color:#b9eaff!important;border-color:#7bdfff!important;text-shadow:none!important}
+.leaflet-control-zoom{overflow:hidden;border-radius:10px!important}
+.leaflet-control-zoom a{background:#06243d!important;color:#78e8ff!important;border-bottom:1px solid #1a5575!important}
+.leaflet-control-zoom a:hover{background:#0a3c5d!important}
+.leaflet-control-attribution{background:rgba(2,13,26,.78)!important;color:#8dbbd2!important;font-size:9px!important}
+.leaflet-control-attribution a{color:#4ed8ff!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#061d32!important;color:#e7f6ff!important;border:1px solid #1e6688}
+.leaflet-popup-content-wrapper{box-shadow:0 10px 35px #0009,0 0 18px #00bfff15}
+.leaflet-popup-content{margin:13px 14px}
+.popup-sub{color:#8fb9d2!important}.popup-grid span{color:#b8d9e9!important}.popup-grid b{color:#effaff!important}
+.leaflet-popup-content hr{border-top-color:#1a4a64!important}
+.telemetry-marker-host,.telemetry-cluster-host{background:transparent!important;border:0!important}
+.telemetry-marker-wrap{width:24px;height:24px;display:grid;place-items:center;position:relative}
+.telemetry-marker{width:13px;height:13px;border:2px solid #effbff;border-radius:50%;display:block;box-shadow:0 0 0 3px rgba(25,199,255,.16),0 0 12px currentColor;position:relative;z-index:2}
+.telemetry-marker.operational{background:#25e7a0;color:#25e7a0}
+.telemetry-marker.offline{background:#ff526b;color:#ff526b}
+.telemetry-marker.attention{background:#ffc247;color:#ffc247}
+.telemetry-marker.operational:after{content:"";position:absolute;inset:-6px;border:1px solid rgba(37,231,160,.72);border-radius:50%;animation:telemetryPulse 2.1s ease-out infinite}
+.telemetry-cluster{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:#eafaff;font-weight:900;font-size:12px;letter-spacing:-.02em;border:1px solid rgba(107,229,255,.95);background:radial-gradient(circle at 35% 25%,rgba(23,197,255,.85),rgba(2,51,87,.95) 65%);box-shadow:0 0 0 5px rgba(25,199,255,.12),0 0 22px rgba(25,199,255,.48),inset 0 0 12px rgba(255,255,255,.14)}
+.telemetry-cluster.medium{border-color:#4ce4ff;background:radial-gradient(circle at 35% 25%,#0d8eb9,#05233f 70%);box-shadow:0 0 0 5px #19c7ff1f,0 0 22px #00bfff55}
+.telemetry-cluster.large{border-color:#6effd0;background:radial-gradient(circle at 35% 25%,#0c997b,#032b3b 70%);box-shadow:0 0 0 6px #00e6a01b,0 0 26px #00e6a055}
+.leaflet-marker-icon{transition:filter .18s ease}.leaflet-marker-icon:hover{filter:brightness(1.3)}
+.map-hud{position:absolute;left:12px;top:12px;z-index:850;pointer-events:none;padding:8px 11px;border:1px solid rgba(25,199,255,.36);border-radius:9px;background:rgba(2,16,31,.88);backdrop-filter:blur(8px);color:#bfeeff;box-shadow:0 5px 20px #0005;font-size:9px;letter-spacing:.035em}
+.map-hud strong{color:#e8faff;font-size:10px}.map-hud .hud-live{display:inline-block;width:6px;height:6px;border-radius:50%;background:#25e7a0;box-shadow:0 0 8px #25e7a0;margin-right:6px}
+@keyframes telemetryPulse{0%{transform:scale(.72);opacity:.95}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:720px){.map-hud{top:auto;bottom:58px;left:10px;font-size:8px}.leaflet-control-layers{max-width:180px}.telemetry-cluster{width:36px;height:36px}}
+</style>
+
+
+<style id="v11-map-tile-fix">
+/* Darken and tint OSM tiles for a digital map without a CARTO API key. */
+.leaflet-layer.v11-dark-tiles .leaflet-tile{
+  filter:invert(100%) hue-rotate(180deg) brightness(.78) contrast(1.12) saturate(.72);
+}
+.leaflet-layer.v11-osm-tiles .leaflet-tile{filter:none}
+</style>
+
+
+<style id="v12-all-systems-scroll">
+#telemetryMapPanel{scroll-margin-top:92px}
+#telemetryMapPanel.map-focus-pulse{animation:mapFocusPulse 1.25s ease-out}
+@keyframes mapFocusPulse{
+  0%{box-shadow:0 0 0 2px rgba(25,199,255,.95),0 0 28px rgba(25,199,255,.42)}
+  100%{box-shadow:var(--panel-shadow,none)}
+}
+</style>
+
+
+<style id="v13-dark-tech-selector-fix">
+/* Leaflet puts GridLayer className on the layer container, not each tile image. */
+.leaflet-layer.v11-dark-tiles .leaflet-tile{
+  filter:invert(100%) hue-rotate(180deg) brightness(.78) contrast(1.12) saturate(.72) !important;
+}
+.leaflet-layer.v11-osm-tiles .leaflet-tile{filter:none !important}
+</style>
+
+</head>
+<body>
+<canvas id="digitalCanvas" aria-hidden="true"></canvas>
+<header class="top"><div class="logo-wrap"><img class="brand-logo" src="nia-logo.png" alt="NIA"></div><div class="brand"><h1>Flood Forecasting &amp; Warning System</h1><p>National Telemetry GIS • Consolidated Inventory &amp; Monitoring Portal</p></div><div class="top-search"><span>⌕</span><input id="globalSearch" placeholder="Search station, location, or equipment…"></div><button class="notify" id="alertsBtn" title="Inventory alerts" aria-label="Inventory alerts">♟<b></b></button><div class="badge">NIA FFWS • V14 DIGITAL COMMAND CENTER</div></header>
+<div class="layout"><aside class="sidebar"><div class="side-title">National Coverage</div>
+<button class="navitem active" data-area="ALL"><i class="dot"></i>All Systems <b class="nav-count" data-count="ALL">0</b></button><button class="navitem" data-area="CAR"><i class="dot"></i>CAR <b class="nav-count" data-count="CAR">0</b></button><button class="navitem" data-area="Region I"><i class="dot"></i>Region I <b class="nav-count" data-count="Region I">0</b></button><button class="navitem" data-area="Region II"><i class="dot"></i>Region II <b class="nav-count" data-count="Region II">0</b></button><button class="navitem" data-area="Region III"><i class="dot"></i>Region III <b class="nav-count" data-count="Region III">0</b></button><button class="navitem" data-area="Region IV-A"><i class="dot"></i>Region IV-A <b class="nav-count" data-count="Region IV-A">0</b></button><button class="navitem" data-area="Region IV-B"><i class="dot"></i>Region IV-B <b class="nav-count" data-count="Region IV-B">0</b></button><button class="navitem" data-area="Region V"><i class="dot"></i>Region V <b class="nav-count" data-count="Region V">0</b></button><button class="navitem" data-area="Region VI"><i class="dot"></i>Region VI <b class="nav-count" data-count="Region VI">0</b></button><button class="navitem" data-area="Region VII"><i class="dot"></i>Region VII <b class="nav-count" data-count="Region VII">0</b></button><button class="navitem" data-area="Region VIII"><i class="dot"></i>Region VIII <b class="nav-count" data-count="Region VIII">0</b></button><button class="navitem" data-area="Region IX"><i class="dot"></i>Region IX <b class="nav-count" data-count="Region IX">0</b></button><button class="navitem" data-area="Region X"><i class="dot"></i>Region X <b class="nav-count" data-count="Region X">0</b></button><button class="navitem" data-area="Region XI"><i class="dot"></i>Region XI <b class="nav-count" data-count="Region XI">0</b></button><button class="navitem" data-area="Region XII"><i class="dot"></i>Region XII <b class="nav-count" data-count="Region XII">0</b></button><button class="navitem" data-area="Region XIII"><i class="dot"></i>Region XIII <b class="nav-count" data-count="Region XIII">0</b></button>
+<div class="side-title">Integrated Systems</div><button class="navitem" data-area="MARIIS"><i class="dot"></i>MARIIS <b class="nav-count" data-count="MARIIS">0</b></button> <button class="navitem" data-area="UPRIIS"><i class="dot"></i>UPRIIS <b class="nav-count" data-count="UPRIIS">0</b></button>
+<div class="side-note"><b>Loaded inventory:</b> 131 records — 28 MARIIS, 28 Region I, 7 Region II, 23 Region III, 4 Region XI, and 41 UPRIIS. Counts are generated from the loaded dataset; keep inventory records verified and current.</div></aside>
+<section class="content"><div class="hero"><h2>NIA National Telemetry GIS Portal</h2><p>Geographic view of telemetry, weather stations, warning systems and related FFWS assets.</p></div>
+<div class="metrics"><div class="metric"><div class="metric-icon">🗺️</div><div><small>TOTAL SYSTEMS</small><b id="mTotal">—</b><span>Loaded inventory</span></div></div><div class="metric"><div class="metric-icon" style="background:#e9f8ef">✓</div><div><small>OPERATIONAL</small><b id="mOp">—</b><span>Ready / operational</span></div><div class="ring" id="ringOp"></div></div><div class="metric"><div class="metric-icon" style="background:#fff0f1">!</div><div><small>OFFLINE</small><b id="mOff">—</b><span>Troubleshooting</span></div><div class="ring" id="ringOff"></div></div><div class="metric"><div class="metric-icon" style="background:#fff7e6">♟</div><div><small>ATTENTION</small><b id="mAtt">—</b><span>Needs checking</span></div><div class="ring" id="ringAtt"></div></div><div class="metric"><div class="metric-icon" style="background:#eef0ff">⌖</div><div><small>SELECTED AREA</small><b id="mArea">ALL</b><span id="mAreaSub">Filter scope</span></div></div></div>
+
+<div class="storm-section">
+ <div class="storm-panel">
+  <div class="storm-head">
+   <div><h3>🌊 STORM Reservoir Monitor</h3><p>Magat Dam &amp; Pantabangan Dam • Authorized STORM export reader</p></div>
+   <div class="storm-actions">
+    <input id="stormJsonFile" class="storm-file" type="file" accept=".json,application/json" aria-label="Select STORM JSON export">
+    <button class="storm-btn" id="stormLoadBtn" type="button">↥ Load JSON</button>
+    <button class="storm-btn" id="stormRestoreBtn" type="button">⟳ Restore Saved</button>
+    <button class="storm-btn" id="stormClearBtn" type="button">✕ Clear Saved</button>
+    <a class="storm-btn" href="https://storm.nia.gov.ph/" target="_blank" rel="noopener noreferrer">↗ Open STORM</a>
+   </div>
+  </div>
+  <div class="storm-body">
+   <article class="dam-card" id="stormMagat">
+    <div class="dam-photo magat" role="img" aria-label="User-supplied photograph of Magat Dam with MAGAT DAM lettering visible"><div class="dam-photo-copy"><div><h4>MAGAT DAM</h4><p>Isabela • MARIIS • NIA STORM</p></div><span class="dam-photo-tag"><i></i> STORM DATA SOURCE</span></div></div>
+    <div class="dam-title"><b>MAGAT DAM</b><span class="storm-status" id="magatState">AWAITING EXPORT</span></div>
+    <div class="storm-values"><div class="storm-value"><small>Reservoir level</small><strong id="magatLevel">—</strong><em>m</em></div><div class="storm-value"><small>Inflow</small><strong id="magatInflow">—</strong><em>cms</em></div><div class="storm-value"><small>Outflow</small><strong id="magatOutflow">—</strong><em>cms</em></div></div>
+    <div class="storm-meta" id="magatMeta">Select a fresh JSON export from STORM to display readings and observation time.</div>
+   </article>
+   <article class="dam-card" id="stormPantabangan">
+    <div class="dam-photo pantabangan" role="img" aria-label="User-supplied aerial photograph of a dam and reservoir used as the Pantabangan visual banner"><div class="dam-photo-copy"><div><h4>PANTABANGAN DAM</h4><p>Nueva Ecija • Pampanga-Bataan IMO • NIA STORM</p></div><span class="dam-photo-tag"><i></i> STORM DATA SOURCE</span></div></div>
+    <div class="dam-title"><b>PANTABANGAN DAM</b><span class="storm-status" id="pantabanganState">AWAITING EXPORT</span></div>
+    <div class="storm-values"><div class="storm-value"><small>Reservoir level</small><strong id="pantabanganLevel">—</strong><em>m</em></div><div class="storm-value"><small>Inflow</small><strong id="pantabanganInflow">—</strong><em>cms</em></div><div class="storm-value"><small>Outflow*</small><strong id="pantabanganOutflow">—</strong><em>cms</em></div></div>
+    <div class="storm-meta" id="pantabanganMeta">Select a fresh JSON export from STORM to display readings and observation time.</div>
+   </article>
+  </div>
+  <div class="storm-foot"><span id="stormImportStatus"><strong>Data status:</strong> No export loaded. This panel is not live-connected.</span><span>*Pantabangan outflow uses the exported Aya spillway discharge series when present.</span><span>File is processed locally in this browser; it is not uploaded to a server.</span></div>
+ </div>
+</div>
+
+<div class="workspace"><div class="panel" id="telemetryMapPanel"><div class="panel-head"><h3>🗺️ Interactive FFWS / Telemetry Map</h3><small id="mapCount">0 records</small></div><div class="toolbar"><input id="search" placeholder="Search station, location, type, telemetry…"><select id="status"><option value="">All status</option><option>OPERATIONAL</option><option>OFFLINE</option><option>NON-OPERATIONAL</option><option>OPERATIONAL / FOR MAINTENANCE</option></select><select id="type"><option value="">All equipment types</option></select><button class="map-btn export-btn" id="exportBtn" type="button">⇩ Export CSV</button></div><div class="mapbox"><div id="map"></div><div class="map-hud"><span class="hud-live"></span><strong>GIS TELEMETRY VIEW</strong><br><span id="mapHudText">National coverage • Layered basemap</span></div><div class="map-actions"><button class="map-btn" id="fullBtn">⛶ Full View</button><button class="map-btn" id="locBtn">◎ Area Focus</button></div><div class="legend"><div><i style="background:#16b36b"></i>Operational</div><div><i style="background:#e84d58"></i>Non-operational</div><div><i style="background:#e6a52e"></i>Attention</div></div></div></div>
+<div class="panel"><div id="listView"><div class="panel-head"><h3>📡 Inventory Records</h3><small>Click a station</small></div><div class="list" id="list"></div></div><div id="detail" class="detail"></div></div></div>
+<div class="coverage"><div class="panel" style="padding:14px"><div class="panel-head" style="padding:0 0 10px;border:0"><h3>🇵🇭 NIA Coverage Structure</h3><small>Click an area to filter</small></div><div class="coverage-grid" id="areas"></div></div></div>
+<div class="footer"><span>NIA FFWS National Telemetry GIS Portal • V14 STORM Snapshot Command Center</span><span>Powered by INONGZKY • Data should come from authorized NIA inventory sources</span></div></section></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script src="stations_v51.js?v=20261014v11internationalmap"></script>
+<script>
+const AREA_NAMES=['CAR','Region I','Region II','Region III','Region IV-A','Region IV-B','Region V','Region VI','Region VII','Region VIII','Region IX','Region X','Region XI','Region XII','Region XIII','MARIIS','UPRIIS'];
+STATIONS.forEach(s=>{s.systemArea=s.systemArea||'MARIIS';s.region=s.region||'';});
+
+// Verified GPS supplied for Sta. Maria - Burgos RIS, Ilocos Sur.
+const sm=STATIONS.find(s=>s.name&&s.name.includes('Sta. Maria - Burgos RIS'));if(sm){sm.lat=17.363992;sm.lon=120.472981;}
+const map=L.map('map',{zoomControl:false,preferCanvas:false,worldCopyJump:true}).setView([12.4,122.0],6);
+L.control.zoom({position:'topleft'}).addTo(map);
+/* Key-free public basemaps: avoid CARTO tiles that returned "API KEY REQUIRED". */
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors',className:'v11-osm-tiles'});
+const dark=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors',className:'v11-dark-tiles'});
+const light=osm;
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Tiles © Esri'});
+const satLabels=L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Labels © Esri'});
+const topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:17,attribution:'Map data © OpenStreetMap contributors, SRTM | Map style © OpenTopoMap'});
+dark.addTo(map);
+const markerOptions={chunkedLoading:true,showCoverageOnHover:false,spiderfyOnMaxZoom:true,zoomToBoundsOnClick:true,removeOutsideVisibleBounds:true,maxClusterRadius:46,animate:true,iconCreateFunction:function(cluster){const n=cluster.getChildCount();const size=n>=50?'large':n>=15?'medium':'';return L.divIcon({html:'<div class="telemetry-cluster '+size+'">'+n+'</div>',className:'telemetry-cluster-host',iconSize:[42,42],iconAnchor:[21,21]})}};
+const markerLayers={
+ 'Rain Gauges':L.markerClusterGroup({...markerOptions}),
+ 'Water Level / Flow':L.markerClusterGroup({...markerOptions}),
+ 'Weather Stations':L.markerClusterGroup({...markerOptions}),
+ 'Warning / Siren':L.markerClusterGroup({...markerOptions}),
+ 'CCTV':L.markerClusterGroup({...markerOptions}),
+ 'Other Telemetry':L.markerClusterGroup({...markerOptions})
+};
+Object.values(markerLayers).forEach(g=>g.addTo(map));
+const baseMaps={'Dark Tech / Global':dark,'Satellite Imagery':sat,'Satellite + Labels':L.layerGroup([sat,satLabels]),'OpenStreetMap':osm,'Light / Streets':light,'Topographic':topo};
+L.control.layers(baseMaps,markerLayers,{position:'topright',collapsed:true,sortLayers:true}).addTo(map);
+L.control.scale({position:'bottomright',imperial:false,metric:true,maxWidth:110}).addTo(map);
+map.on('mousemove',e=>{const el=document.getElementById('mapHudText');if(el)el.textContent='Lat '+e.latlng.lat.toFixed(4)+' • Lon '+e.latlng.lng.toFixed(4)+' • Zoom '+map.getZoom()});
+map.on('mouseout',()=>{const el=document.getElementById('mapHudText');if(el)el.textContent='National coverage • Layered basemap'});
+const layer={clearLayers(){Object.values(markerLayers).forEach(g=>g.clearLayers())}},search=document.getElementById('search'),status=document.getElementById('status'),type=document.getElementById('type'),globalSearch=document.getElementById('globalSearch');
+[...new Set(STATIONS.map(s=>s.type).filter(Boolean))].sort().forEach(t=>type.insertAdjacentHTML('beforeend',`<option>${esc(t)}</option>`));
+function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'&#92;'}[m]||m))}
+function isOffline(s){return s.status==='OFFLINE'||s.status==='NON-OPERATIONAL'}
+function layerFor(s){const t=((s.type||'')+' '+(s.name||'')).toLowerCase();if(/rain gauge|tipping bucket/.test(t))return markerLayers['Rain Gauges'];if(/water level|flow rate|flowmeter|discharge/.test(t))return markerLayers['Water Level / Flow'];if(/weather|wind speed|wind direction|humidity|temperature|pressure sensor|barometer|pyranometer/.test(t))return markerLayers['Weather Stations'];if(/siren|warning|sircom|alarm/.test(t))return markerLayers['Warning / Siren'];if(/cctv|camera/.test(t))return markerLayers['CCTV'];return markerLayers['Other Telemetry']}
+function statClass(s){return s.status==='OPERATIONAL'?'op':isOffline(s)?'off':'att'}
+let current='ALL',focusOnArea=true;
+function countArea(a){if(a==='ALL')return STATIONS.length;if(a==='MARIIS'||a==='UPRIIS')return STATIONS.filter(s=>s.systemArea===a||s.system===a).length;return STATIONS.filter(s=>(s.region||s.systemArea)===a).length}
+function updateCoverageCounts(){document.querySelectorAll('[data-count]').forEach(el=>el.textContent=countArea(el.dataset.count));}
+
+function matchesArea(s){if(current==='ALL')return true;if(current==='MARIIS')return s.systemArea==='MARIIS';if(current==='UPRIIS')return s.systemArea==='UPRIIS';return s.region===current}
+function filtered(){const q=(search.value||'').toLowerCase().trim();return STATIONS.filter(s=>matchesArea(s)&&(!q||(s.name+' '+s.location+' '+s.type+' '+s.telemetry+' '+s.remarks+' '+(s.system||'')+' '+(s.contractor||'')).toLowerCase().includes(q))&&(!status.value||s.status===status.value)&&(!type.value||s.type===type.value))}
+function fitTo(arr){const pts=arr.filter(s=>Number.isFinite(Number(s.lat))&&Number.isFinite(Number(s.lon))).map(s=>[Number(s.lat),Number(s.lon)]);if(!pts.length)return;if(pts.length===1)map.flyTo(pts[0],13,{duration:.8,easeLinearity:.2});else map.flyToBounds(pts,{padding:[45,45],maxZoom:11,duration:1.0,easeLinearity:.2});setTimeout(()=>map.invalidateSize(),350)}
+function popup(s){const lat=Number(s.lat),lon=Number(s.lon);const coord=Number.isFinite(lat)&&Number.isFinite(lon)?`${lat.toFixed(6)}, ${lon.toFixed(6)}`:'Coordinates not provided';return `<div style="min-width:250px"><div class="popup-title">${esc(s.name)}</div><div class="popup-sub">${esc(s.location)}</div><hr style="border:0;border-top:1px solid #e1e8ec;margin:8px 0"><div class="popup-grid"><b>Region</b><span>${esc(s.region||'—')}</span><b>System</b><span>${esc(s.system||s.systemArea||'—')}</span><b>Type</b><span>${esc(s.type||'—')}</span><b>Telemetry</b><span>${esc(s.telemetry||'—')}</span><b>Status</b><span>${esc(s.status||'—')}</span><b>Year</b><span>${esc(s.yearAcquired||'—')}</span><b>Supplier</b><span>${esc(s.contractor||'—')}</span><b>Remarks</b><span>${esc(s.remarks||'—')}</span><b>Coordinates</b><span>${coord}</span></div></div>`}
+function render(shouldFocus=false){const arr=filtered();layer.clearLayers();arr.forEach(s=>{const lat=Number(s.lat),lon=Number(s.lon);if(!Number.isFinite(lat)||!Number.isFinite(lon))return;const kind=s.status==='OPERATIONAL'?'operational':isOffline(s)?'offline':'attention';const icon=L.divIcon({html:'<span class="telemetry-marker-wrap"><span class="telemetry-marker '+kind+'"></span></span>',className:'telemetry-marker-host',iconSize:[24,24],iconAnchor:[12,12],popupAnchor:[0,-10]});const marker=L.marker([lat,lon],{icon,keyboard:true,title:s.name||'Telemetry station',alt:s.name||'Telemetry station'}).bindPopup(popup(s));marker.on('click',()=>highlightStation(s.id));marker.addTo(layerFor(s))});
+document.getElementById('mapCount').textContent=arr.length+' records';document.getElementById('mTotal').textContent=arr.length;const op=arr.filter(s=>s.status==='OPERATIONAL').length,off=arr.filter(isOffline).length,att=arr.length-op-off;document.getElementById('mOp').textContent=op;document.getElementById('mOff').textContent=off;document.getElementById('mAtt').textContent=att;document.getElementById('mArea').textContent=current;document.getElementById('mAreaSub').textContent=current==='ALL'?'National scope':(current==='MARIIS'?'Integrated system':'Regional scope');
+const pct=n=>arr.length?Math.round(n/arr.length*100):0;document.getElementById('ringOp').style.background=`conic-gradient(var(--green) 0 ${pct(op)}%,#e8eef2 ${pct(op)}% 100%)`;document.getElementById('ringOff').style.background=`conic-gradient(var(--red) 0 ${pct(off)}%,#e8eef2 ${pct(off)}% 100%)`;document.getElementById('ringAtt').style.background=`conic-gradient(var(--amber) 0 ${pct(att)}%,#e8eef2 ${pct(att)}% 100%)`;
+document.getElementById('list').innerHTML=arr.length?arr.map((s,i)=>`<div class="station" data-id="${s.id}"><div class="station-top"><span class="station-name">${i+1}. ${esc(s.name)}</span><span class="status ${statClass(s)}">${esc(s.status)}</span></div><div class="station-loc">${esc(s.location)}</div><div class="chips"><span class="chip">${esc(s.system||s.systemArea||'—')}</span><span class="chip">${esc(s.type||'—')}</span><span class="chip">${esc(s.telemetry||'—')}</span></div></div>`).join(''):`<div class="empty">No inventory records match the current filters.<br><br>Try <b>All status</b> or clear the search.</div>`;document.querySelectorAll('.station').forEach(el=>el.onclick=()=>showDetail(STATIONS.find(s=>String(s.id)===el.dataset.id)));if(shouldFocus)fitTo(arr)}
+function showDetail(s){if(!s)return;document.getElementById('listView').style.display='none';const d=document.getElementById('detail');d.className='detail show';const lat=Number(s.lat),lon=Number(s.lon);const coord=Number.isFinite(lat)&&Number.isFinite(lon)?lat.toFixed(6)+', '+lon.toFixed(6):'Coordinates not provided';d.innerHTML=`<button class="back" onclick="hideDetail()">← Back to inventory</button><h3>${esc(s.name)}</h3><p>${esc(s.location)}</p><div class="facts">${[['Region',s.region||'—'],['System',s.system||s.systemArea||'—'],['Status',s.status],['Equipment Type',s.type],['Telemetry',s.telemetry],['Year Acquired',s.yearAcquired||'—'],['Contractor/Supplier',s.contractor||'—'],['Coordinates',coord],['Remarks',s.remarks||'—']].map(x=>`<div class="fact"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('')}</div>`;if(Number.isFinite(lat)&&Number.isFinite(lon)){map.flyTo([lat,lon],14,{duration:.7});setTimeout(()=>L.popup().setLatLng([lat,lon]).setContent(popup(s)).openOn(map),550)}}
+function hideDetail(){document.getElementById('detail').className='detail';document.getElementById('listView').style.display='block'}
+function highlightStation(id){const el=document.querySelector(`.station[data-id="${id}"]`);if(el){el.scrollIntoView({block:'nearest',behavior:'smooth'});el.style.background='#eaf7fb';setTimeout(()=>el.style.background='',700)}}
+function setArea(a){current=a;search.value='';status.value='';type.value='';globalSearch.value='';hideDetail();document.querySelectorAll('.navitem').forEach(x=>x.classList.toggle('active',x.dataset.area===a));refreshCoverageText();render(true);
+ if(a==='ALL'){
+   const target=document.getElementById('telemetryMapPanel');
+   if(target){
+     window.setTimeout(()=>{target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.remove('map-focus-pulse');void target.offsetWidth;target.classList.add('map-focus-pulse');window.setTimeout(()=>target.classList.remove('map-focus-pulse'),1350);if(window.map&&typeof map.invalidateSize==='function')window.setTimeout(()=>map.invalidateSize(),450);},80);
+   }
+ }
+}
+document.querySelectorAll('.navitem,.area').forEach(x=>x.onclick=()=>setArea(x.dataset.area));[search,status,type].forEach(x=>x.addEventListener('input',()=>render(false)));globalSearch.addEventListener('input',()=>{search.value=globalSearch.value;render(false)});document.getElementById('locBtn').onclick=()=>fitTo(filtered());document.getElementById('fullBtn').onclick=()=>{const el=document.querySelector('.mapbox');if(!document.fullscreenElement)el.requestFullscreen?.();else document.exitFullscreen?.()};
+const areas=document.getElementById('areas');areas.innerHTML=AREA_NAMES.map(a=>`<div class="area" data-area="${a}"><b>${a}</b><span data-area-summary="${a}">${countArea(a)} currently assigned records</span></div>`).join('');document.querySelectorAll('.area').forEach(x=>x.onclick=()=>setArea(x.dataset.area));
+function refreshCoverageText(){document.querySelectorAll('[data-area-summary]').forEach(el=>el.textContent=countArea(el.dataset.areaSummary)+' currently assigned records');updateCoverageCounts();}
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+document.getElementById('exportBtn').addEventListener('click',()=>{const arr=filtered();const cols=['id','name','location','region','systemArea','system','type','telemetry','status','yearAcquired','contractor','subscription','lat','lon','remarks','source'];const csv=[cols.join(','),...arr.map(s=>cols.map(k=>csvCell(s[k])).join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='NIA_FFWS_Inventory_'+current.replace(/[^A-Za-z0-9]+/g,'_')+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);});
+document.getElementById('alertsBtn').addEventListener('click',()=>{const flagged=STATIONS.filter(s=>isOffline(s)||/expired|maintenance|replacement|defective|stolen|no data|troubleshoot|for checking|repair/i.test((s.remarks||'')+' '+(s.status||'')));const offline=STATIONS.filter(isOffline).length;const attention=flagged.length-offline;alert('NIA FFWS INVENTORY ALERTS\n\nTotal records: '+STATIONS.length+'\nOffline / non-operational: '+offline+'\nRecords with remarks requiring review (may overlap): '+attention+'\n\nPlease verify status and subscription details against the latest authorized inventory.');});
+refreshCoverageText();render(true);setTimeout(()=>map.invalidateSize(),400);
+</script>
+<script>
+
+// STORM JSON export reader. Local-only; restores last imported snapshot on this browser.
+(()=>{
+ const fileInput=document.getElementById('stormJsonFile');
+ const loadBtn=document.getElementById('stormLoadBtn');
+ const restoreBtn=document.getElementById('stormRestoreBtn');
+ const clearBtn=document.getElementById('stormClearBtn');
+ const importStatus=document.getElementById('stormImportStatus');
+ if(!fileInput||!loadBtn)return;
+ const STORAGE_KEY='nia_ffws_storm_snapshot_v14';
+ const SERIES={
+  magat:{level:'magatLevel',inflow:'magatInflow',outflow:'magatOutflow',state:'magatState',meta:'magatMeta',keys:{level:/water level.*magat|magatwaterlevel/i,inflow:/inflow.*magat/i,outflow:/outflow.*magat/i}},
+  pantabangan:{level:'pantabanganLevel',inflow:'pantabanganInflow',outflow:'pantabanganOutflow',state:'pantabanganState',meta:'pantabanganMeta',keys:{level:/water level.*pantabangan|pantabanganwaterlevel/i,inflow:/inflow.*pantabangan/i,outflow:/outflow.*aya.*spill|ayaspillq/i}}
+ };
+ const fmt=v=>v===null||v===undefined||v===''?'N/A':Number.isFinite(Number(v))?Number(v).toLocaleString('en-PH',{maximumFractionDigits:3}):String(v);
+ const stamp=v=>{if(!v)return 'Timestamp unavailable';const d=new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString('en-PH',{timeZone:'Asia/Manila',dateStyle:'medium',timeStyle:'short'})+' PHT'};
+ function setText(id,value){const el=document.getElementById(id);if(el)el.textContent=value;}
+ function readDatasetValues(data){
+  if(!data||!Array.isArray(data.Datasets)||!Array.isArray(data.Rows))throw new Error('JSON structure not recognized. Please use the STORM Bulk Export JSON file.');
+  const out={};
+  for(const [dam,cfg] of Object.entries(SERIES)){
+   out[dam]={};
+   for(const [param,re] of Object.entries(cfg.keys)){
+    const idx=data.Datasets.findIndex(ds=>re.test(String(ds.Identifier||'')+' '+String(ds.Label||'')));
+    if(idx<0){out[dam][param]={value:null,time:null,unit:param==='level'?'m':'cms'};continue;}
+    let found=null;
+    for(let r=data.Rows.length-1;r>=0;r--){const pt=data.Rows[r].Points?.[idx];if(pt&&pt.Value!==null&&pt.Value!==undefined&&pt.Value!==''&&Number.isFinite(Number(pt.Value))){found={value:Number(pt.Value),time:data.Rows[r].Timestamp,unit:data.Datasets[idx].Unit|| (param==='level'?'m':'cms')};break;}}
+    out[dam][param]=found||{value:null,time:null,unit:data.Datasets[idx].Unit|| (param==='level'?'m':'cms')};
+   }
+  }
+  return out;
+ }
+ function renderDam(dam,values){
+  const cfg=SERIES[dam],v=values[dam]||{};
+  for(const param of ['level','inflow','outflow'])setText(cfg[param],fmt(v[param]?.value));
+  const stamps=['level','inflow','outflow'].map(k=>v[k]?.time).filter(Boolean).sort();
+  const latest=stamps.length?stamps[stamps.length-1]:null;
+  const times=['level','inflow','outflow'].map(k=>v[k]?.time?`${k}: ${stamp(v[k].time)}`:`${k}: no value`).join(' • ');
+  setText(cfg.meta,`Latest available observations — ${latest?stamp(latest):'No readings found'}. ${times}`);
+  const state=document.getElementById(cfg.state);if(state){state.textContent=latest?'SNAPSHOT LOADED':'NO READINGS';state.classList.toggle('loaded',!!latest);}
+ }
+ function renderAll(values){renderDam('magat',values);renderDam('pantabangan',values);}
+ function statusMessage(meta, restored=false){
+  const loadedAt=meta?.loadedAt?new Date(meta.loadedAt):null;
+  const loadedText=loadedAt&&!Number.isNaN(loadedAt.getTime())?loadedAt.toLocaleString('en-PH',{timeZone:'Asia/Manila',dateStyle:'medium',timeStyle:'short'})+' PHT':'time unavailable';
+  const rangeText=meta?.rangeText||'range not specified';
+  importStatus.textContent='';const strong=document.createElement('strong');strong.textContent='Data status: ';
+  const age=loadedAt?Date.now()-loadedAt.getTime():Infinity;
+  const freshness=age<24*60*60*1000?'Recent import':'Check snapshot age';
+  importStatus.append(strong,document.createTextNode(`${restored?'Saved snapshot restored':'Export loaded'} • ${meta?.fileName||'STORM JSON'} • imported ${loadedText} • data range: ${rangeText} • ${freshness}. Snapshot only—not a live feed.`));
+ }
+ function persist(values,meta){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({values,meta}));return true;}catch(e){return false;}}
+ function restore(silent=false){
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw){if(!silent)importStatus.textContent='No saved STORM snapshot in this browser yet. Load a STORM JSON export first.';return false;}
+   const saved=JSON.parse(raw);if(!saved.values||!saved.values.magat||!saved.values.pantabangan)throw new Error('Saved snapshot format is invalid.');
+   renderAll(saved.values);statusMessage(saved.meta,true);return true;
+  }catch(e){if(!silent)importStatus.textContent='Could not restore saved snapshot: '+(e.message||'Unknown error');return false;}
+ }
+ async function load(){
+  const file=fileInput.files&&fileInput.files[0];if(!file){importStatus.textContent='Please select the STORM JSON export first.';return;}
+  try{const raw=await file.text();const data=JSON.parse(raw);const values=readDatasetValues(data);
+   const range=data.TimeRange||{};const rangeText=range.StartTime&&range.EndTime?`${stamp(range.StartTime)} – ${stamp(range.EndTime)}`:'range not specified';
+   const meta={fileName:file.name,loadedAt:new Date().toISOString(),rangeText};renderAll(values);
+   const saved=persist(values,meta);statusMessage(meta,false);
+   if(!saved)importStatus.textContent+=' Browser storage was unavailable; this view will not persist after reload.';
+  }catch(e){importStatus.textContent='Unable to read export: '+(e&&e.message?e.message:'Unknown error');}
+ }
+ loadBtn.addEventListener('click',load);
+ if(restoreBtn)restoreBtn.addEventListener('click',()=>restore(false));
+ if(clearBtn)clearBtn.addEventListener('click',()=>{try{localStorage.removeItem(STORAGE_KEY);importStatus.textContent='Saved snapshot cleared from this browser. Existing readings remain visible until you reload or import another file.';}catch(e){importStatus.textContent='Unable to clear saved snapshot in this browser.';}});
+ fileInput.addEventListener('change',()=>{if(fileInput.files?.length)importStatus.textContent='Selected '+fileInput.files[0].name+'. Press “Load JSON” to read and save the snapshot locally.';});
+ // Auto-restore the last imported snapshot on page load. This does not fetch new STORM data.
+ restore(true);
+})();
+
+</script>
+<script>
+// Lightweight animated digital atmosphere; decorative only, no external data calls.
+(()=>{const c=document.getElementById('digitalCanvas');if(!c)return;const ctx=c.getContext('2d');let w=0,h=0,dpr=1,pts=[],raf=0;const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);const n=Math.min(90,Math.floor(w*h/18000));pts=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,v:.15+Math.random()*.55,r:.5+Math.random()*1.4,a:.12+Math.random()*.38,trail:Math.random()*90}));}
+function draw(){ctx.clearRect(0,0,w,h);for(let i=0;i<pts.length;i++){const p=pts[i];if(!reduce){p.y-=p.v;p.x+=Math.sin((p.y+p.trail)/85)*.16;if(p.y< -5){p.y=h+5;p.x=Math.random()*w;}}ctx.beginPath();ctx.fillStyle=`rgba(50,190,255,${p.a})`;ctx.shadowBlur=9;ctx.shadowColor='rgba(20,175,255,.55)';ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();if(i%4===0){ctx.beginPath();ctx.strokeStyle=`rgba(34,175,255,${p.a*.24})`;ctx.lineWidth=.7;ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+8,p.y-18);ctx.stroke();}}ctx.shadowBlur=0;if(!reduce)raf=requestAnimationFrame(draw);}
+addEventListener('resize',resize,{passive:true});resize();draw();})();
+</script>
+</body></html>
